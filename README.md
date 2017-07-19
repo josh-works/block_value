@@ -1,24 +1,6 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Misc resources I've used throughout the build process
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- [my project propsal](https://github.com/turingschool/ruby-submissions/blob/master/1701-b/4module/capstone_projects/project_proposals/josh.md)
+- I'm using [Levels'](https://twitter.com/levelsio) [hoodmaps walkthrough](https://levels.io/hoodmaps/)

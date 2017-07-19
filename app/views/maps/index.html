@@ -1,0 +1,34 @@
+<h1>Block Value</h1>
+
+<script>
+
+
+  function getMousePos() {
+    console.log(
+      event.clientY,
+      event.clientX
+    )
+
+  }
+
+
+  $(function () {
+    $(".map").on('click', getMousePos)
+    $(".map").on('mousemove', getMousePos)
+
+  })
+
+
+</script>
+
+<style>
+
+  .map {
+    background-color: red
+  }
+
+</style>
+
+<canvas class="map">
+
+</canvas>
