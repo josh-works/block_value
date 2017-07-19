@@ -12,6 +12,7 @@
   var mouseDown = false
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
+
   let lastX = 0;
   let lastY = 0;
 
@@ -24,6 +25,8 @@
     ctx.beginPath();
     ctx.moveTo(lastX, lastY)
     ctx.lineTo(event.offsetX, event.offsetY)
+    ctx.stroke();
+    [lastX, lastY] = [event.offsetX, event.offsetY]
     console.log(
       event.offsetX,
       event.offsetY,
