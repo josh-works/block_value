@@ -1,20 +1,47 @@
 <h1>Block Value</h1>
 
+<canvas class="map">
+
+</canvas>
+
+
+
+
 <script>
 
+  var mouseDown = false
+  const canvas = document.querySelector('.map')
+  const ctx = canvas.getContext('2d')
+  let lastX = 0;
+  let lastY = 0;
 
-  function getMousePos() {
+  canvas.width = window.innerWidth - 30
+  canvas.height = window.innerHeight - 30
+
+
+  function drawShit() {
+    if(!mouseDown) return;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY)
+    ctx.lineTo(event.offsetX, event.offsetY)
     console.log(
-      event.clientY,
-      event.clientX
-    )
-
+      event.offsetX,
+      event.offsetY,
+    );
   }
 
 
   $(function () {
-    $(".map").on('click', getMousePos)
-    $(".map").on('mousemove', getMousePos)
+    $(".map").on('mousedown', function() {
+        mouseDown = true
+    })
+    $(".map").on('mouseup', function() {
+        mouseDown = false
+    })
+    $(".map").on('mouseout', function() {
+        mouseDown = false
+    })
+    $(".map").on('mousemove', drawShit)
 
   })
 
@@ -24,11 +51,8 @@
 <style>
 
   .map {
-    background-color: red
+    border: solid 0.3em;
+    border-color: red
   }
 
 </style>
-
-<canvas class="map">
-
-</canvas>
