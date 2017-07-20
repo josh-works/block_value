@@ -2,6 +2,11 @@
 
 <canvas class="map" width="2000" height="500"></canvas>
 
+<div class="paintbrush-settings">
+  <label for="stroke-size">Brush Size:</label>
+  <input id="stroke-size" type="range" name="stroke-size" min="1" max="30" value="10" data-sizing="px">
+</div>
+
 <div class="color-picker">
   <div class="red" data-color="red">
     <span>Concrete</span>
@@ -26,22 +31,29 @@
   var mouseDown = false
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
+  let brushSize = 10
 
   // canvas.width = window.innerWidth
   // canvas.height = window.innerHeight
 
   ctx.fillRect(0,0,10,10)
-  ctx.fillStyle = "#ffc600"
+  ctx.fillStyle = "#ffff00"
+  // ctx.lineCap = 'round'
+  ctx.lineWidth = 10
 
 
   function drawShit() {
     let x = event.offsetX
     let y = event.offsetY
+    ctx.globalAlpha = 0.3;
+    // ctx.globalCompositeOperation = 'source-in'
 
     if(!mouseDown) return;
     ctx.beginPath();
-    ctx.moveTo(x, y)
-    ctx.fillRect(x, y, 10, 10)
+    ctx.moveTo(x,y)
+    // ctx.lineTo(x, y)
+
+    ctx.fillRect(x, y, brushSize, brushSize)
     ctx.stroke();
       // send this shit to server eventually
       // console.log(
@@ -53,6 +65,10 @@
 
   function setColor(){
     ctx.fillStyle = this.dataset.color
+  }
+
+  function setBrushSize() {
+    brushSize = this.value
   }
 
   $(function () {
@@ -71,6 +87,10 @@
         mouseDown = false
     })
     $(".map").on('mousemove', drawShit)
+
+    $(".paintbrush-settings input").on('change', setBrushSize)
+    $(".paintbrush-settings input").on('mousemove', setBrushSize)
+
   })
 
 
@@ -128,6 +148,19 @@
   }
   .color-picker div.black {
     background-color: black;
+  }
+
+  .paintbrush-settings * {
+    /*display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;*/
+
+    color: grey;
+    font-size: 2em;
+    text-shadow: 1px 1px 1px #000;
+    width: 20%;
+    height: 20px;
+
   }
 
 </style>
