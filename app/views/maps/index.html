@@ -13,20 +13,20 @@
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
 
-  let lastX = 0;
-  let lastY = 0;
-
   canvas.width = window.innerWidth - 30
   canvas.height = window.innerHeight - 30
+  ctx.fillRect(0,0,10,10)
+  ctx.fillStyle = "#ffc600"
 
 
   function drawShit() {
+    let x = event.offsetX - 1
+    let y = event.offsetY - 1
     if(!mouseDown) return;
     ctx.beginPath();
-    ctx.moveTo(lastX, lastY)
-    ctx.lineTo(event.offsetX, event.offsetY)
+    ctx.moveTo(x, y)
+    ctx.fillRect(x, y, 5, 5)
     ctx.stroke();
-    [lastX, lastY] = [event.offsetX, event.offsetY]
     console.log(
       event.offsetX,
       event.offsetY,
@@ -38,13 +38,16 @@
     $(".map").on('mousedown', function() {
         mouseDown = true
     })
+
     $(".map").on('mouseup', function() {
         mouseDown = false
     })
+
     $(".map").on('mouseout', function() {
         mouseDown = false
     })
     $(".map").on('mousemove', drawShit)
+
 
   })
 
