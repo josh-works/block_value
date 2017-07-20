@@ -3,11 +3,21 @@
 <canvas class="map" width="2000" height="500"></canvas>
 
 <div class="color-picker">
-  <div class="red" data-color="red"> </div>
-  <div class="yellow" data-color="yellow"> </div>
-  <div class="green" data-color="green"> </div>
-  <div class="blue" data-color="blue"> </div>
-  <div class="black" data-color="black"> </div>
+  <div class="red" data-color="red">
+    <span>Concrete</span>
+  </div>
+  <div class="yellow" data-color="yellow">
+    <span>Setback</span>
+  </div>
+  <div class="green" data-color="green">
+    <span>Building</span>
+  </div>
+  <div class="blue" data-color="blue">
+    <span>Sidewalks</span>
+  </div>
+  <div class="black" data-color="black">
+    <span>???</span>
+  </div>
 </div>
 
 <script>
@@ -74,6 +84,10 @@
     margin: 0;
   }
 
+  body {
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  }
+
   .map {
     border: solid 0.3em;
     /*width: 2000;
@@ -92,6 +106,12 @@
     padding: 2em;
     width: 20%;
     float: left;
+  }
+
+  .color-picker div span {
+    color: #fff;
+    font-size: 2em;
+    text-shadow: 1px 1px 1px #000;
   }
 
   .color-picker div.red {
