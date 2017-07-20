@@ -1,0 +1,64 @@
+<h1>Block Value</h1>
+
+<canvas class="map">
+
+</canvas>
+
+
+
+
+<script>
+
+  var mouseDown = false
+  const canvas = document.querySelector('.map')
+  const ctx = canvas.getContext('2d')
+
+  canvas.width = window.innerWidth - 30
+  canvas.height = window.innerHeight - 30
+  ctx.fillRect(0,0,10,10)
+  ctx.fillStyle = "#ffc600"
+
+
+  function drawShit() {
+    let x = event.offsetX - 1
+    let y = event.offsetY - 1
+    if(!mouseDown) return;
+    ctx.beginPath();
+    ctx.moveTo(x, y)
+    ctx.fillRect(x, y, 5, 5)
+    ctx.stroke();
+    console.log(
+      event.offsetX,
+      event.offsetY,
+    );
+  }
+
+
+  $(function () {
+    $(".map").on('mousedown', function() {
+        mouseDown = true
+    })
+
+    $(".map").on('mouseup', function() {
+        mouseDown = false
+    })
+
+    $(".map").on('mouseout', function() {
+        mouseDown = false
+    })
+    $(".map").on('mousemove', drawShit)
+
+
+  })
+
+
+</script>
+
+<style>
+
+  .map {
+    border: solid 0.3em;
+    border-color: red
+  }
+
+</style>
