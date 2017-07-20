@@ -59,6 +59,10 @@
     // ctx.lineTo(x, y)
 
     ctx.fillRect(x, y, brushSize, brushSize)
+    console.log(
+      x,
+      y
+    );
     ctx.stroke();
       // send this shit to server eventually
       // console.log(
@@ -120,6 +124,7 @@
     height: 500px;*/
     background-image:url('/assets/bg_golden_small.jpg');
     background-size: auto;
+    cursor: crosshair;
   }
 
   .color-picker {
@@ -135,6 +140,7 @@
     width: 20%;
     float: left;
     display: block;
+    cursor: pointer;
   }
 
   .color-picker div span {
