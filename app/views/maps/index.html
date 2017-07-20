@@ -24,15 +24,21 @@
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
 
-  canvas.width = window.innerWidth - 30
-  canvas.height = window.innerHeight - 30
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
   ctx.fillRect(0,0,10,10)
   ctx.fillStyle = "#ffc600"
 
 
   function drawShit() {
-    let x = event.offsetX - 1
-    let y = event.offsetY - 1
+    // let x = event.offsetX - 1
+    // let y = event.offsetY - 1
+    let x = event.clientX
+    let y = event.clientY
+
+    console.log(event);
+    // let x = event.offsetX - 1
+    // let y = event.offsetY - 1
     if(!mouseDown) return;
     ctx.beginPath();
     ctx.moveTo(x, y)
@@ -53,6 +59,7 @@
   $(function () {
 
     colors.forEach(picker => picker.addEventListener('click', setColor))
+
     $(".map").on('mousedown', function() {
         mouseDown = true
     })
@@ -74,9 +81,19 @@
 
 <style>
 
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
   .map {
     border: solid 0.3em;
-    border-color: red
+    width: 100%;
+    height: 500px;
+    background-color: black;
+    background-image:url('/assets/bg_golden.jpg');
+    background-size: contain;
   }
 
   .color-picker {
@@ -87,7 +104,7 @@
   .color-picker div {
     padding: 2em;
     width: 20%;
-    border: 2px solid black;
+    float: left;
   }
 
   .color-picker div.red {
