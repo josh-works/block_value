@@ -1,13 +1,24 @@
 <h1>Block Value</h1>
 
-<canvas class="map">
+<canvas class="map"></canvas>
 
-</canvas>
+<div class="color-picker">
+  <div class="red" data-color="red"> </div>
+  <div class="yellow" data-color="yellow"> </div>
+  <div class="green" data-color="green"> </div>
+  <div class="blue" data-color="blue"> </div>
+  <div class="black" data-color="black"> </div>
+</div>
+
 
 
 
 
 <script>
+
+  var colors = document.querySelectorAll(".color-picker div")
+
+
 
   var mouseDown = false
   const canvas = document.querySelector('.map')
@@ -27,14 +38,21 @@
     ctx.moveTo(x, y)
     ctx.fillRect(x, y, 5, 5)
     ctx.stroke();
-    console.log(
-      event.offsetX,
-      event.offsetY,
-    );
+      // send this shit to server eventually
+      // console.log(
+      //   event.offsetX,
+      //   event.offsetY,
+      // );
   }
 
 
+  function setColor(){
+    ctx.fillStyle = this.dataset.color
+  }
+
   $(function () {
+
+    colors.forEach(picker => picker.addEventListener('click', setColor))
     $(".map").on('mousedown', function() {
         mouseDown = true
     })
@@ -59,6 +77,33 @@
   .map {
     border: solid 0.3em;
     border-color: red
+  }
+
+  .color-picker {
+    width: 100%;
+    height: 10px;
+
+  }
+  .color-picker div {
+    padding: 2em;
+    width: 20%;
+    border: 2px solid black;
+  }
+
+  .color-picker div.red {
+    background-color:red;
+  }
+  .color-picker div.yellow {
+    background-color: yellow;
+  }
+  .color-picker div.green {
+    background-color: green;
+  }
+  .color-picker div.blue {
+    background-color: blue;
+  }
+  .color-picker div.black {
+    background-color: black;
   }
 
 </style>
