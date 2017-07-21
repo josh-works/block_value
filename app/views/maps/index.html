@@ -1,7 +1,16 @@
-<h1>Block Value</h1>
+<div class="brand">
+  Block Value
+</div>
 
-<canvas class="map" width="2000" height="500"></canvas>
 
+<h3>My Google Maps Demo</h3>
+    <div id="demo-map"></div>
+
+
+<div id="brush"></div>
+<div class="canvas_container">
+  <canvas class="map" width="2000" height="500"></canvas>
+</div>
 
 <div class="color-picker">
   <div class="red" data-color="red">
@@ -22,64 +31,105 @@
 
 </div>
 
-<div class="paintbrush-settings">
-  <label for="stroke-size">Brush Size:</label>
-  <input id="stroke-size" type="range" name="stroke-size" min="1" max="30" value="10" data-sizing="px">
+<div class="analytics">
+analytics:
+  <h3>hello</h3>
 </div>
+<div class="paintbrush-settings">
+  <div class="brush-size">
+    <label>Brush Size:</label>
+    <input id="stroke-size" type="range" name="stroke-size" min="1" max="30" value="10" data-sizing="px">
+  </div>
+</div>
+
 
 
 
 
 <script>
 
+  // load gmaps
+
+  function initMap() {
+    var golden = {lat: 39.748327, lng: -105.217697};
+    var map = new google.maps.Map(document.getElementById('demo-map'), {
+      zoom: 18,
+      center: golden,
+      mapTypeId: 'satellite'
+    });
+  }
+
   var colors = document.querySelectorAll(".color-picker div")
   var mouseDown = false
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
+  // var img = new Image()
+  // img.src = 'http://www.tricedesigns.com/wp-content/uploads/2012/01/brush2.png'
   let brushSize = 10
+  ctx.lineJoin = ctx.lineCap = 'round'
 
   // canvas.width = window.innerWidth
   // canvas.height = window.innerHeight
 
   ctx.fillRect(0,0,10,10)
   ctx.fillStyle = "#ffff00"
-  // ctx.lineCap = 'round'
-  ctx.lineWidth = 10
+  ctx.strokeStyle = "#ffff00"
 
 
   function drawShit() {
-    let x = event.offsetX
-    let y = event.offsetY
+    if(!mouseDown) return;
+    ctx.lineWidth = brushSize
+
+    var isDrawing, points = []
+    points.push({x: event.offsetX, y: event.offsetY})
+    ctx.clearRect(0,0, 5, 5)
+
+    // let x = event.offsetX
+    // let y = event.offsetY
     ctx.globalAlpha = 0.3;
+
     // ctx.globalCompositeOperation = 'source-in'
 
-    if(!mouseDown) return;
     ctx.beginPath();
-    ctx.moveTo(x,y)
+    ctx.moveTo(points[0].x, points[0].y)
+    for (var i = 0; i < points.length; i++) {
+      ctx.lineTo(points[i].x, points[i].y)
+    }
     // ctx.lineTo(x, y)
 
-    ctx.fillRect(x, y, brushSize, brushSize)
-    console.log(
-      x,
-      y
-    );
+    // ctx.fillRect(x, y, brushSize, brushSize)
+    $('div.analytics h3').text(
+      `
+      x= ${event.offsetX}
+      y= ${event.offsetY}
+      `
+    )
     ctx.stroke();
       // send this shit to server eventually
-      // console.log(
-      //   event.offsetX,
-      //   event.offsetY,
-      // );
+
+    moveBrush(event.offsetX, event.offsetY)
+    // console.log(x, y);
   }
 
 
   function setColor(){
-    ctx.fillStyle = this.dataset.color
+    var color = this.dataset.color
+    ctx.fillStyle = color
+    ctx.strokeStyle = color
+    $('#brush').css('background-color', color)
     $('.color-picker div').removeClass('active')
     this.classList.add('active')
   }
 
   function setBrushSize() {
     brushSize = this.value
+    $('#brush').css('width', this.value)
+    $('#brush').css('height', this.value)
+  }
+
+  function moveBrush(x, y) {
+    $('#brush').css('left', x)
+    $('#brush').css('top', y)
   }
 
   $(function () {
@@ -102,6 +152,8 @@
     $(".paintbrush-settings input").on('change', setBrushSize)
     $(".paintbrush-settings input").on('mousemove', setBrushSize)
 
+    // $(".map").on('mousemove', moveBrush)
+
   })
 
 
@@ -113,10 +165,27 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
   }
 
   body {
     font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  }
+
+  .brand {
+    font-family: 'Arimo', sans-serif;
+    color: #fff;
+    font-size: 3em;
+    text-shadow: 1px 1px 1px #000;
+    margin-bottom: -20px;
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1000;
+    pointer-events: none;
   }
 
   .map {
@@ -141,6 +210,11 @@
     float: left;
     display: block;
     cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  .color-picker div:hover {
+    opacity: 0.5;
   }
 
   .color-picker div span {
@@ -166,17 +240,35 @@
   }
 
   .color-picker div.active {
-    border-style: solid;
     font-weight: 800;
   }
 
+  #brush {
+    background-color: #ffff00;
+    border-radius: 100%;
+    width: 1em;
+    height: 1em;
+    position: fixed;
+    top:10;
+    left:20;
+  }
+
   .paintbrush-settings {
-    float: left;
+    width: 100%;
+  }
+
+  .brush-size {
     color: grey;
     font-size: 2em;
     text-shadow: 1px 1px 1px #000;
     width: 20%;
     height: 20px;
+  }
+
+  #demo-map {
+   width: 100%;
+   height: 400px;
+   background-color: grey;
   }
 
 </style>
