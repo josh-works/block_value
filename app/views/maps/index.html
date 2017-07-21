@@ -1,9 +1,16 @@
-<h1>Block Value</h1>
+<div class="brand">
+  Block Value
+</div>
+
+
+<h3>My Google Maps Demo</h3>
+    <div id="demo-map"></div>
 
 
 <div id="brush"></div>
-
-<canvas class="map" width="2000" height="500"></canvas>
+<div class="canvas_container">
+  <canvas class="map" width="2000" height="500"></canvas>
+</div>
 
 <div class="color-picker">
   <div class="red" data-color="red">
@@ -24,6 +31,10 @@
 
 </div>
 
+<div class="analytics">
+analytics:
+  <h3>hello</h3>
+</div>
 <div class="paintbrush-settings">
   <div class="brush-size">
     <label>Brush Size:</label>
@@ -34,7 +45,19 @@
 
 
 
+
 <script>
+
+  // load gmaps
+
+  function initMap() {
+    var golden = {lat: 39.748327, lng: -105.217697};
+    var map = new google.maps.Map(document.getElementById('demo-map'), {
+      zoom: 18,
+      center: golden,
+      mapTypeId: 'satellite'
+    });
+  }
 
   var colors = document.querySelectorAll(".color-picker div")
   var mouseDown = false
@@ -75,10 +98,12 @@
     // ctx.lineTo(x, y)
 
     // ctx.fillRect(x, y, brushSize, brushSize)
-    // console.log({
-    //   x: x,
-    //   y: y,
-    // });
+    $('div.analytics h3').text(
+      `
+      x= ${event.offsetX}
+      y= ${event.offsetY}
+      `
+    )
     ctx.stroke();
       // send this shit to server eventually
 
@@ -148,6 +173,19 @@
 
   body {
     font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  }
+
+  .brand {
+    font-family: 'Arimo', sans-serif;
+    color: #fff;
+    font-size: 3em;
+    text-shadow: 1px 1px 1px #000;
+    margin-bottom: -20px;
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1000;
+    pointer-events: none;
   }
 
   .map {
@@ -225,6 +263,12 @@
     text-shadow: 1px 1px 1px #000;
     width: 20%;
     height: 20px;
+  }
+
+  #demo-map {
+   width: 100%;
+   height: 400px;
+   background-color: grey;
   }
 
 </style>
