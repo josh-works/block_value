@@ -47,7 +47,16 @@
    background-image:url('/assets/bg_golden_small.jpg');
    background-size: auto;
    cursor: crosshair;
+   opacity: 0.5;
  }
+
+ /*#google-map {
+   position: absolute;
+   top: 0;
+   left: 0;
+   z-index: 10000;
+
+ }*/
 
  .color-picker {
    width: 100%;
