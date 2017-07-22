@@ -24,7 +24,6 @@ function initMap() {
     center: golden,
     mapTypeId: 'satellite'
   });
-  alert('hi')
 }
 
 var colors = document.querySelectorAll(".color-picker div")

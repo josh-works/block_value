@@ -47,7 +47,10 @@
    background-image:url('/assets/bg_golden_small.jpg');
    background-size: auto;
    cursor: crosshair;
-   opacity: 0.5;
+   position: absolute;
+   top: 0;
+   left: 0;
+   opacity: 0.3;
  }
 
  /*#google-map {
@@ -105,20 +108,55 @@
    font-weight: 800;
  }
 
- #brush {
-   background-color: #ffff00;
-   border-radius: 100%;
-   width: 1em;
-   height: 1em;
-   position: fixed;
-   top:10;
-   left:20;
+ .analytics {
+   clear: left;
+   display: block;
  }
+
+
 
  .paintbrush-settings {
    width: 100%;
  }
 
+ .paintbrush-settings div {
+   /*padding: 2em;*/
+   width: 100%;
+   text-align: center;
+   vertical-align: middle;
+   height: 3em;
+   margin-top: -5px;
+   width: 20%;
+   float: left;
+   display: block;
+   cursor: pointer;
+   text-transform: uppercase;
+ }
+
+ .paintbrush-settings div span {
+   color: #fff;
+   font-size: 1.5em;
+   text-shadow: 1px 1px 1px #000;
+ }
+
+ .paintbrush-settings div.toggle-draw-move-map {
+   float: inline;
+   background-color: blue;
+ }
+
+ .paintbrush-settings div.brush-size {
+   float: inline;
+   background-color: red;
+ }
+
+ #brush {
+   clear: left;
+   background-color: #ffff00;
+   border-radius: 100%;
+   width: 0em;
+   height: 0em;
+   float: left;
+ }
  .brush-size {
    color: grey;
    font-size: 2em;
