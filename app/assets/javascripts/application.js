@@ -48,7 +48,19 @@ function drawShit() {
   ctx.lineWidth = brushSize
 
   var isDrawing, points = []
+  console.log({
+    offsetX: event.offsetX,
+    offsetY: event.offsetY,
+    clientX: event.clientX,
+    clientY: event.clientY,
+    pageX: event.pageX,
+    pageY: event.pageY
+  });
+
   points.push({x: event.offsetX, y: event.offsetY})
+  console.log({
+    points: points[0]
+  });
   ctx.clearRect(0,0, 5, 5)
 
   // let x = event.offsetX
@@ -59,8 +71,16 @@ function drawShit() {
 
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y)
+  console.log({
+    movetoX: points[0].x,
+    movetoY: points[0].y
+  });
   for (var i = 0; i < points.length; i++) {
     ctx.lineTo(points[i].x, points[i].y)
+    console.log({
+      pointsX: points[i].x,
+      pointsY: points[i].y
+    });
   }
   // ctx.lineTo(x, y)
 
@@ -73,9 +93,7 @@ function drawShit() {
   )
   ctx.stroke();
     // send this shit to server eventually
-
   moveBrush(event.offsetX, event.offsetY)
-  // console.log(x, y);
 }
 
 
