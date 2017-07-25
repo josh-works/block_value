@@ -45,15 +45,17 @@ ctx.strokeStyle = "#ffff00"
 
 function drawShit() {
   if(!mouseDown) return;
+  var offsetX = event.offsetX
+  var offsetY = event.offsetY
   ctx.lineWidth = brushSize
 
   var isDrawing, points = []
 
-  points.push({x: event.offsetX, y: event.offsetY})
+  points.push({x: offsetX, y: offsetY})
   ctx.clearRect(0,0, 5, 5)
 
-  // let x = event.offsetX
-  // let y = event.offsetY
+  // let x = offsetX
+  // let y = offsetY
   ctx.globalAlpha = 0.3;
 
   // ctx.globalCompositeOperation = 'source-in'
@@ -66,13 +68,27 @@ function drawShit() {
 
   $('div.analytics h3').text(
     `
-    x= ${event.offsetX}
-    y= ${event.offsetY}
+    x= ${offsetX}
+    y= ${offsetY}
     `
   )
   ctx.stroke();
     // send this shit to server eventually
-  moveBrush(event.offsetX, event.offsetY)
+
+  // console.log(x, y);
+  // console.log("moving brush");
+}
+
+function moveBrush(offsetX, offsetY) {
+  $('#brush').css('visibility', 'visible')
+  console.log(offsetX, offsetY);
+  $('#brush').css('left', offsetX+"px")
+  $('#brush').css('top', offsetY+"px")
+}
+
+function hideBrush() {
+  console.log("hiding brush")
+  $('#brush').css('visibility', 'hidden')
 }
 
 
@@ -83,6 +99,7 @@ function setColor(){
   $('#brush').css('background-color', color)
   $('.color-picker div').removeClass('active')
   this.classList.add('active')
+
 }
 
 function setBrushSize() {
@@ -91,32 +108,34 @@ function setBrushSize() {
   $('#brush').css('height', this.value)
 }
 
-function moveBrush(x, y) {
-  $('#brush').css('left', x)
-  $('#brush').css('top', y)
-}
-
 function toggleDrawMove() {
   if(this.dataset.canvasActive === "true"){
     this.dataset.canvasActive = "false"
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Draw on Map"
-
-
     $('#google-map').css('z-index', 12)
   } else {
     this.dataset.canvasActive = "true"
     $('#google-map').css('z-index', 8)
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Move Map"
-
   }
 }
 
+function saveDrawing() {
+  // console.log("saving dat $$$");
+  ctx.save()
+}
+
+function loadDrawing() {
+  // console.log("loading that shit");
+  ctx.restore()
+}
 
 $(function () {
 
   colors.forEach(picker => picker.addEventListener('click', setColor))
+  $(document).ready(loadDrawing)
 
   $(".map").on('mousedown', function() {
       mouseDown = true
@@ -134,7 +153,14 @@ $(function () {
   $(".paintbrush-settings input").on('change', setBrushSize)
   $(".paintbrush-settings input").on('mousemove', setBrushSize)
   $('#toggle-draw-move-map').on('click', toggleDrawMove)
+  $('.map').on('mouseleave', function() {
+    saveDrawing()
+    hideBrush()
+  })
+  $(".map").on('mousemove', function() {
+    moveBrush(event.offsetX, event.offsetY)
+  })
 
-  // $(".map").on('mousemove', moveBrush)
+
 
 })
