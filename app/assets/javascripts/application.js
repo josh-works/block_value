@@ -76,6 +76,7 @@ function drawShit() {
     movetoY: points[0].y
   });
   for (var i = 0; i < points.length; i++) {
+    console.log(points.length);
     ctx.lineTo(points[i].x, points[i].y)
     console.log({
       pointsX: points[i].x,
