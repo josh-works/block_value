@@ -118,6 +118,24 @@ function moveBrush(x, y) {
   $('#brush').css('top', y)
 }
 
+function toggleDrawMove() {
+  if(this.dataset.canvasActive === "true"){
+    this.dataset.canvasActive = "false"
+    var text = $('#toggle-draw-move-map > span')
+    text[0].innerText = "Draw on Map"
+
+
+    $('#google-map').css('z-index', 12)
+  } else {
+    this.dataset.canvasActive = "true"
+    $('#google-map').css('z-index', 8)
+    var text = $('#toggle-draw-move-map > span')
+    text[0].innerText = "Move Map"
+
+  }
+}
+
+
 $(function () {
 
   colors.forEach(picker => picker.addEventListener('click', setColor))
@@ -137,6 +155,7 @@ $(function () {
 
   $(".paintbrush-settings input").on('change', setBrushSize)
   $(".paintbrush-settings input").on('mousemove', setBrushSize)
+  $('#toggle-draw-move-map').on('click', toggleDrawMove)
 
   // $(".map").on('mousemove', moveBrush)
 
