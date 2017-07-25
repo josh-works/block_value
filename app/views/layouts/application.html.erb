@@ -5,14 +5,14 @@
     <%= csrf_meta_tags %>
     <link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJvwH3pXFLFKsgYc47AfX5nmMoao-o4G4&callback=initMap">
-    </script>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
     <%= yield %>
   </body>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJvwH3pXFLFKsgYc47AfX5nmMoao-o4G4&callback=initMap">
+  </script>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 </html>
