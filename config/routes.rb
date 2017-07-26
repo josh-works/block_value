@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   root to: "maps#index"
 
 
-  resource :paths, only: [:create]
+  post '/paths', to: 'user_paths#create'
 end

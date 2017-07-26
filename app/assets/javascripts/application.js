@@ -28,6 +28,10 @@ function initMap() {
   });
 }
 
+//globals
+
+userPathsSentPreviously = []
+
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
@@ -46,7 +50,6 @@ ctx.lineWidth = brushSize
 
 userPaths = []
 
-
 function drawShit() {
   if(!mouseDown) return;
   var offsetX = event.offsetX
@@ -62,29 +65,46 @@ function drawShit() {
     ctx.lineTo(points[i].x, points[i].y)
   }
 
-
   ctx.stroke();
   point = []
   point.x = offsetX
   point.y = offsetY
   var positionOnMap = point2LatLng(point, map)
+  var marker = new google.maps.Marker({
+          position: positionOnMap,
+          map: map,
+        });
 
-  
-  // <storing in array>
   var category=$('.color-picker div.active').data('category')
   var lat = positionOnMap.lat()
   var lng = positionOnMap.lng()
   var time = Date.now()
   userPaths.push([lat, lng], category, time)
-  console.log(userPaths);
-
-
-
-  // </storing in array>
-
 }
 
+setInterval(sendToServer, 1000);
 
+function sendToServer(){
+  console.log("sending stuff");
+  console.log(userPathsSentPreviously);
+  if(userPaths == userPathsSentPreviously)
+  $.ajax({
+    url: '/paths',
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    type: 'POST',
+    data: JSON.stringify(userPaths),
+    success: function(result) {
+      console.log("success");
+    }
+    error: function (result) {
+      console.log("error");
+    }
+    // error: console.log("error")
+  }).done(function () {
+    userPathsSentPreviously = userPaths
+  })
+}
 // convert position on map to coordinates
 function latLng2Point(latLng, map) {
   var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
