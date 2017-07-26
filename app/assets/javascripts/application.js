@@ -99,7 +99,7 @@ function setColor(){
   $('#brush').css('background-color', color)
   $('.color-picker div').removeClass('active')
   this.classList.add('active')
-
+  toggleDrawMove()
 }
 
 function setBrushSize() {
@@ -109,13 +109,14 @@ function setBrushSize() {
 }
 
 function toggleDrawMove() {
-  if(this.dataset.canvasActive === "true"){
-    this.dataset.canvasActive = "false"
+  var canvasActive = $('#toggle-draw-move-map')[0].dataset.canvasActive
+  if(canvasActive === "true"){
+    $('#toggle-draw-move-map')[0].dataset.canvasActive = "false"
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Draw on Map"
     $('#google-map').css('z-index', 12)
   } else {
-    this.dataset.canvasActive = "true"
+    $('#toggle-draw-move-map')[0].dataset.canvasActive = "true"
     $('#google-map').css('z-index', 8)
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Move Map"
