@@ -1,8 +1,13 @@
 class UserPathsController < ApplicationController
 
+  def index
+    render json: UserPath.all
+  end
+
   def create
     # data = UserPath.new(paths_params)
     paths_params.each do |path|
+      # this is pulling each item in single array, making four objects
       UserPath.create!(
                     lat: paths_params[0],
                     long: paths_params[1],

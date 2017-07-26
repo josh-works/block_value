@@ -8,11 +8,10 @@ describe UserPath, type: :request do
 
     post '/paths', params: {data: data}
     return_data = JSON.parse(response.body)
-    binding.pry
+
 
     expect(return_data).to eq(data)
     expect(UserPath.count).to eq(1)
-
   end
 
 
