@@ -17,22 +17,27 @@
 
 // load gmaps
 
+// globals
+
 function initMap() {
   var golden = {lat: 39.748327, lng: -105.217697};
-  var map = new google.maps.Map(document.getElementById('google-map'), {
+  map = new google.maps.Map(document.getElementById('google-map'), {
     zoom: 18,
     center: golden,
     mapTypeId: 'satellite'
   });
 }
 
+
+
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
+
 // var img = new Image()
 // img.src = 'http://www.tricedesigns.com/wp-content/uploads/2012/01/brush2.png'
-let brushSize = 10
+let brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
 // canvas.width = window.innerWidth
@@ -47,6 +52,12 @@ function drawShit() {
   if(!mouseDown) return;
   var offsetX = event.offsetX
   var offsetY = event.offsetY
+  var golden = {lat: 39.748327, lng: -105.217697};
+  // var map = new google.maps.Map(document.getElementById('google-map'), {
+  //   zoom: 18,
+  //   center: golden,
+  //   mapTypeId: 'satellite'
+  // });
   ctx.lineWidth = brushSize
 
   var isDrawing, points = []
@@ -72,22 +83,42 @@ function drawShit() {
     y= ${offsetY}
     `
   )
-  ctx.stroke();
-    // send this shit to server eventually
+  point = []
+  point.x = offsetX
+  point.y = offsetY
+  var positionOnMap = point2LatLng(point, map)
+  var marker = new google.maps.Marker({
+          position: positionOnMap,
+          map: map,
+        });
 
-  // console.log(x, y);
-  // console.log("moving brush");
+
+  ctx.stroke();
+}
+
+function latLng2Point(latLng, map) {
+  var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+  var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+  var scale = Math.pow(2, map.getZoom());
+  var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
+  return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale, (worldPoint.y - topRight.y) * scale);
+}
+
+function point2LatLng(point, map) {
+  var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+  var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+  var scale = Math.pow(2, map.getZoom());
+  var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
+  return map.getProjection().fromPointToLatLng(worldPoint);
 }
 
 function moveBrush(offsetX, offsetY) {
   $('#brush').css('visibility', 'visible')
-  console.log(offsetX, offsetY);
   $('#brush').css('left', offsetX+"px")
   $('#brush').css('top', offsetY+"px")
 }
 
 function hideBrush() {
-  console.log("hiding brush")
   $('#brush').css('visibility', 'hidden')
 }
 
@@ -135,8 +166,8 @@ function loadDrawing() {
 
 $(function () {
 
+
   colors.forEach(picker => picker.addEventListener('click', setColor))
-  $(document).ready(loadDrawing)
 
   $(".map").on('mousedown', function() {
       mouseDown = true
@@ -161,6 +192,10 @@ $(function () {
   $(".map").on('mousemove', function() {
     moveBrush(event.offsetX, event.offsetY)
   })
+
+
+  // convert to pixles
+
 
 
 
