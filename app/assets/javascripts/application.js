@@ -28,20 +28,14 @@ function initMap() {
   });
 }
 
-
-
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
 
-// var img = new Image()
-// img.src = 'http://www.tricedesigns.com/wp-content/uploads/2012/01/brush2.png'
 let brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
-// canvas.width = window.innerWidth
-// canvas.height = window.innerHeight
 
 ctx.fillRect(0,0,10,10)
 ctx.fillStyle = "#ffff00"
@@ -52,12 +46,7 @@ function drawShit() {
   if(!mouseDown) return;
   var offsetX = event.offsetX
   var offsetY = event.offsetY
-  var golden = {lat: 39.748327, lng: -105.217697};
-  // var map = new google.maps.Map(document.getElementById('google-map'), {
-  //   zoom: 18,
-  //   center: golden,
-  //   mapTypeId: 'satellite'
-  // });
+
   ctx.lineWidth = brushSize
 
   var isDrawing, points = []
@@ -92,7 +81,7 @@ function drawShit() {
           map: map,
         });
 
-
+  console.log(positionOnMap.lat(), positionOnMap.lng());
   ctx.stroke();
 }
 
@@ -154,15 +143,6 @@ function toggleDrawMove() {
   }
 }
 
-function saveDrawing() {
-  // console.log("saving dat $$$");
-  ctx.save()
-}
-
-function loadDrawing() {
-  // console.log("loading that shit");
-  ctx.restore()
-}
 
 $(function () {
 
@@ -186,17 +166,9 @@ $(function () {
   $(".paintbrush-settings input").on('mousemove', setBrushSize)
   $('#toggle-draw-move-map').on('click', toggleDrawMove)
   $('.map').on('mouseleave', function() {
-    saveDrawing()
     hideBrush()
   })
   $(".map").on('mousemove', function() {
     moveBrush(event.offsetX, event.offsetY)
   })
-
-
-  // convert to pixles
-
-
-
-
 })
