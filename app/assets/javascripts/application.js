@@ -93,14 +93,7 @@ function sendToServer(){
     dataType: "json",
     contentType: "application/json; charset=utf-8",
     type: 'POST',
-    data: JSON.stringify(userPaths),
-    success: function(result) {
-      console.log("success");
-    }
-    error: function (result) {
-      console.log("error");
-    }
-    // error: console.log("error")
+    data: JSON.stringify(userPaths)
   }).done(function () {
     userPathsSentPreviously = userPaths
   })
