@@ -11,8 +11,9 @@
   <body>
     <%= yield %>
   </body>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJvwH3pXFLFKsgYc47AfX5nmMoao-o4G4&callback=initMap">
   </script>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
 </html>
