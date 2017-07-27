@@ -28,6 +28,7 @@ function initMap() {
   });
 }
 
+//globals
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
@@ -40,25 +41,20 @@ ctx.lineJoin = ctx.lineCap = 'round'
 ctx.fillRect(0,0,10,10)
 ctx.fillStyle = "#ffff00"
 ctx.strokeStyle = "#ffff00"
+ctx.globalAlpha = 0.3;
+ctx.lineWidth = brushSize
 
+// userPaths gets sent to server
+userPaths = []
 
 function drawShit() {
   if(!mouseDown) return;
   var offsetX = event.offsetX
   var offsetY = event.offsetY
 
-  ctx.lineWidth = brushSize
-
   var isDrawing, points = []
-
-  points.push({x: offsetX, y: offsetY})
+  points.push({x: offsetX, y: offsetY, category})
   ctx.clearRect(0,0, 5, 5)
-
-  // let x = offsetX
-  // let y = offsetY
-  ctx.globalAlpha = 0.3;
-
-  // ctx.globalCompositeOperation = 'source-in'
 
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y)
@@ -66,25 +62,31 @@ function drawShit() {
     ctx.lineTo(points[i].x, points[i].y)
   }
 
-  $('div.analytics h3').text(
-    `
-    x= ${offsetX}
-    y= ${offsetY}
-    `
-  )
+  ctx.stroke();
   point = []
   point.x = offsetX
   point.y = offsetY
   var positionOnMap = point2LatLng(point, map)
-  var marker = new google.maps.Marker({
-          position: positionOnMap,
-          map: map,
-        });
 
-  console.log(positionOnMap.lat(), positionOnMap.lng());
-  ctx.stroke();
+  var category=$('.color-picker div.active').data('category')
+  var lat = positionOnMap.lat()
+  var lng = positionOnMap.lng()
+  var time = Date.now()
+  userPaths.push({coords: [lat, lng], category: category, time: time})
 }
 
+// logging shit in my server
+function sendToServer(){
+  console.log("sending userPaths: " + userPaths.length);
+  $.ajax({
+    url: '/paths',
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    type: 'POST',
+    data: JSON.stringify(userPaths)
+  })
+}
+// convert position on map to coordinates
 function latLng2Point(latLng, map) {
   var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
   var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
@@ -100,6 +102,7 @@ function point2LatLng(point, map) {
   var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
   return map.getProjection().fromPointToLatLng(worldPoint);
 }
+// end convert position on map to coordinates
 
 function moveBrush(offsetX, offsetY) {
   $('#brush').css('visibility', 'visible')
@@ -155,6 +158,7 @@ $(function () {
 
   $(".map").on('mouseup', function() {
       mouseDown = false
+      sendToServer()
   })
 
   $(".map").on('mouseout', function() {
