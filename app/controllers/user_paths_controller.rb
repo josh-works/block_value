@@ -15,7 +15,7 @@ class UserPathsController < ApplicationController
                     drawn_at: path["time"]
                     )
     end
-    render json: paths_params
+    # render json: paths_params
   end
 
 

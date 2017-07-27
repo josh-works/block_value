@@ -32,8 +32,20 @@ function initMap() {
 //globals
 
 // ajax call to DB to get all coordinates
-// $allUserPaths = loadUserPaths()
+let allUserPaths
+
+(function () {
+  $.getJSON({
+    url: '/paths',
+    success: function (data) {
+      allUserPaths = data
+      console.log("loaded " +data.length+ " userPaths");
+      drawUserPaths()
+    }
+  })
+})()
 // call a drawUserPaths fn
+
 
 
 var colors = document.querySelectorAll(".color-picker div")
@@ -80,7 +92,6 @@ function drawShit() {
   var lng = positionOnMap.lng()
   var time = Date.now()
 
-  console.log(userId);
   userPaths.push(
       {
         coords: [lat, lng],
@@ -95,8 +106,10 @@ function drawShit() {
  });
 }
 
+
 // draw public coords if available
 function drawUserPaths() {
+  console.log("trying to draw user paths...");
   for (var i = 0; i < allUserPaths.length; i++) {
     console.log(allUserPaths[i]);
   }
@@ -104,8 +117,6 @@ function drawUserPaths() {
 
 // logging shit in my server
 function sendToServer(){
-  console.log("sending userPaths: " + userPaths.length);
-  console.log(userPaths[0]);
   $.ajax({
     url: '/paths',
     dataType: "json",
