@@ -16,3 +16,11 @@ describe UserPath, type: :request do
 
 
 end
+
+# This is what's getting pushed to server:
+# Object {coords: Array(2), category: "setback", time: 1501107834823}
+# category: "setback"
+# coords: Array(2)
+# 0: 39.7478815537324
+# 1: -105.2193921560974
+# time: 1501107834823

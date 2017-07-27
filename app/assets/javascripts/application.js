@@ -70,33 +70,39 @@ function drawShit() {
   point.x = offsetX
   point.y = offsetY
   var positionOnMap = point2LatLng(point, map)
-  var marker = new google.maps.Marker({
-          position: positionOnMap,
-          map: map,
-        });
 
   var category=$('.color-picker div.active').data('category')
   var lat = positionOnMap.lat()
   var lng = positionOnMap.lng()
   var time = Date.now()
-  userPaths.push([lat, lng], category, time)
+  userPaths.push({coords: [lat, lng], category: category, time: time})
 }
 
-setInterval(sendToServer, 1000);
+setInterval(sendToServer, 2000);
 
 function sendToServer(){
-  console.log("sending stuff");
-  console.log(userPathsSentPreviously);
-  if(userPaths == userPathsSentPreviously)
+  console.log(userPaths.length);
+  console.log(userPaths[0]);
+  // console.log(JSON.stringify(userPaths));
+  // console.log(userPathsSentPreviously);
+  // if(userPaths == userPathsSentPreviously)
   $.ajax({
     url: '/paths',
     dataType: "json",
     contentType: "application/json; charset=utf-8",
     type: 'POST',
-    data: JSON.stringify(userPaths)
-  }).done(function () {
-    userPathsSentPreviously = userPaths
-  })
+    data: JSON.stringify(userPaths),
+    success: function (data) {
+      // success?
+      console.log("success");
+    },
+    error: function (xhr, status, error) {
+      console.log("error!");
+      console.log(xhr, status, error);
+    }
+
+  });
+
 }
 // convert position on map to coordinates
 function latLng2Point(latLng, map) {
