@@ -29,9 +29,6 @@ function initMap() {
 }
 
 //globals
-
-userPathsSentPreviously = []
-
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
@@ -47,7 +44,7 @@ ctx.strokeStyle = "#ffff00"
 ctx.globalAlpha = 0.3;
 ctx.lineWidth = brushSize
 
-
+// userPaths gets sent to server
 userPaths = []
 
 function drawShit() {
@@ -78,31 +75,16 @@ function drawShit() {
   userPaths.push({coords: [lat, lng], category: category, time: time})
 }
 
-setInterval(sendToServer, 2000);
-
+// logging shit in my server
 function sendToServer(){
-  console.log(userPaths.length);
-  console.log(userPaths[0]);
-  // console.log(JSON.stringify(userPaths));
-  // console.log(userPathsSentPreviously);
-  // if(userPaths == userPathsSentPreviously)
+  console.log("sending userPaths: " + userPaths.length);
   $.ajax({
     url: '/paths',
     dataType: "json",
     contentType: "application/json; charset=utf-8",
     type: 'POST',
-    data: JSON.stringify(userPaths),
-    success: function (data) {
-      // success?
-      console.log("success");
-    },
-    error: function (xhr, status, error) {
-      console.log("error!");
-      console.log(xhr, status, error);
-    }
-
-  });
-
+    data: JSON.stringify(userPaths)
+  })
 }
 // convert position on map to coordinates
 function latLng2Point(latLng, map) {
@@ -176,6 +158,7 @@ $(function () {
 
   $(".map").on('mouseup', function() {
       mouseDown = false
+      sendToServer()
   })
 
   $(".map").on('mouseout', function() {
