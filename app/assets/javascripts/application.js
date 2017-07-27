@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+//- require md5
 
 // load gmaps
 
@@ -29,11 +30,17 @@ function initMap() {
 }
 
 //globals
+
+// ajax call to DB to get all coordinates
+// $allUserPaths = loadUserPaths()
+// call a drawUserPaths fn
+
+
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
-
+const userId = md5(Math.random())
 let brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
@@ -41,7 +48,7 @@ ctx.lineJoin = ctx.lineCap = 'round'
 ctx.fillRect(0,0,10,10)
 ctx.fillStyle = "#ffff00"
 ctx.strokeStyle = "#ffff00"
-ctx.globalAlpha = 0.3;
+ctx.globalAlpha = 0.8;
 ctx.lineWidth = brushSize
 
 // userPaths gets sent to server
@@ -72,18 +79,41 @@ function drawShit() {
   var lat = positionOnMap.lat()
   var lng = positionOnMap.lng()
   var time = Date.now()
-  userPaths.push({coords: [lat, lng], category: category, time: time})
+
+  console.log(userId);
+  userPaths.push(
+      {
+        coords: [lat, lng],
+        category: category,
+        time: time,
+        user_id: userId
+      }
+    )
+  var marker = new google.maps.Marker({
+   position: positionOnMap,
+   map: map
+ });
+}
+
+// draw public coords if available
+function drawUserPaths() {
+  for (var i = 0; i < allUserPaths.length; i++) {
+    console.log(allUserPaths[i]);
+  }
 }
 
 // logging shit in my server
 function sendToServer(){
   console.log("sending userPaths: " + userPaths.length);
+  console.log(userPaths[0]);
   $.ajax({
     url: '/paths',
     dataType: "json",
     contentType: "application/json; charset=utf-8",
     type: 'POST',
     data: JSON.stringify(userPaths)
+  }).then(function () {
+    userPaths = []
   })
 }
 // convert position on map to coordinates
