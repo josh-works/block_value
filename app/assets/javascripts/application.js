@@ -45,12 +45,17 @@ function fetchUserPaths() {
   $.getJSON({
     url: '/paths',
     success: function (data) {
+      console.log(data.length);
       allUserPaths = data
       console.log("loaded " +data.length+ " userPaths");
-      collectUserPoints(event)
+      collectUserPoints()
     }
   })
 }
+// call a drawUserPaths fn
+
+// draw public coords if available
+
 
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
@@ -80,7 +85,6 @@ userPaths = []
 
 function drawShit() {
   if(!mouseDown) return;
-  console.log("DRAWING from inside drawStuff");
   var offsetX = event.offsetX
   var offsetY = event.offsetY
 
@@ -92,8 +96,6 @@ function drawShit() {
   ctx.moveTo(points[0].x, points[0].y)
   for (var i = 0; i < points.length; i++) {
     ctx.lineTo(points[i].x, points[i].y)
-    console.log({"pointsx": points[i].x,
-                "pointsy": points[i].y});
   }
 
   ctx.stroke();
@@ -134,32 +136,31 @@ function sendToServer(){
 
 
 
-function collectUserPoints(event) {
-  console.log("allUserPaths.length: ", allUserPaths.length);
+function collectUserPoints() {
   for (var i = 0; i < allUserPaths.length; i++) {
-    console.log("allUserPaths, i: ", allUserPaths.length, i);
-    path = allUserPaths[i]
-    point = {}
-    point.x = path.lat
-    point.y = path.long
-    var curPosition = new google.maps.LatLng(point.x, point.y)
+    var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
     var newMark = latLng2Point(curPosition, map)
-
-    // drawUserPaths(newMark, allUserPaths[i], event)
+    console.log("newmark from latlng2point:", newMark);
+    drawUserPaths(newMark, allUserPaths[i].category)
   }
 }
 
-function drawUserPaths(latLng, orgData, event) {
+let testPathCount = 0
+function drawUserPaths(latLng, color, event) {
+  testPathCount++
+  console.log(testPathCount);
   // console.log({
-  //   fillStyle: colorKey[orgData.category],
+  //   fillStyle: colorKey[color.category],
   //   lineWidth: map.zoom,
   //   latLngX: latLng.x,
   //   latLngY: latLng.y
   // });
-  ctx.fillStyle = "purple";
-  ctx.strokeStyle = "purple";
-  // ctx.fillStyle = colorKey[orgData.category]
-  // ctx.strokeStyle = colorKey[orgData.category]
+
+  const canvas = document.querySelector('.map')
+  const ctx = canvas.getContext('2d')
+
+  ctx.fillStyle = colorKey[color]
+  ctx.strokeStyle = colorKey[color]
   ctx.globalAlpha = 0.8;
   ctx.lineWidth = map.zoom / 3
 
@@ -169,14 +170,13 @@ function drawUserPaths(latLng, orgData, event) {
   //   "latlngx": latLng.x,
   //   "latlngY": latLng.y
   // })
-
   ctx.beginPath();
-  console.log("drawing on screen w/latlngx/y: ", latLng.x, latLng.y);
-  // ctx.lineTo(548, 154)
+  console.log("drawing:", latLng.x, latLng.y);
+  ctx.moveTo(latLng.x, latLng.y)
   ctx.lineTo(latLng.x, latLng.y)
   ctx.stroke();
 
-
+  //
   // ctx.beginPath();
   // ctx.moveTo(points[0].x, points[0].y)
   // for (var i = 0; i < points.length; i++) {
@@ -243,6 +243,7 @@ function toggleDrawMove() {
     $('#google-map').css('z-index', 8)
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Move Map"
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     collectUserPoints(event)
   }
 }
@@ -265,7 +266,7 @@ $(function () {
   $(".map").on('mouseout', function() {
       mouseDown = false
   })
-  $(".map").on('mousemove', drawShit)
+  // $(".map").on('mousemove', drawShit)
 
   $(".paintbrush-settings input").on('change', setBrushSize)
   $(".paintbrush-settings input").on('mousemove', setBrushSize)
