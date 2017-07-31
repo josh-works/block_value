@@ -45,7 +45,6 @@ function fetchUserPaths() {
   $.getJSON({
     url: '/paths',
     success: function (data) {
-      console.log(data.length);
       allUserPaths = data
       console.log("loaded " +data.length+ " userPaths");
       collectUserPoints()
@@ -140,22 +139,11 @@ function collectUserPoints() {
   for (var i = 0; i < allUserPaths.length; i++) {
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
     var newMark = latLng2Point(curPosition, map)
-    console.log("newmark from latlng2point:", newMark);
     drawUserPaths(newMark, allUserPaths[i].category)
   }
 }
 
-let testPathCount = 0
 function drawUserPaths(latLng, color, event) {
-  testPathCount++
-  console.log(testPathCount);
-  // console.log({
-  //   fillStyle: colorKey[color.category],
-  //   lineWidth: map.zoom,
-  //   latLngX: latLng.x,
-  //   latLngY: latLng.y
-  // });
-
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
 
@@ -164,25 +152,12 @@ function drawUserPaths(latLng, color, event) {
   ctx.globalAlpha = 0.8;
   ctx.lineWidth = map.zoom / 3
 
-  // console.log({
-  //   "event.offsetX": event.offsetX,
-  //   "event.offsetY": event.offsetY,
-  //   "latlngx": latLng.x,
-  //   "latlngY": latLng.y
-  // })
+
   ctx.beginPath();
-  console.log("drawing:", latLng.x, latLng.y);
   ctx.moveTo(latLng.x, latLng.y)
   ctx.lineTo(latLng.x, latLng.y)
   ctx.stroke();
 
-  //
-  // ctx.beginPath();
-  // ctx.moveTo(points[0].x, points[0].y)
-  // for (var i = 0; i < points.length; i++) {
-  //   ctx.lineTo(points[i].x, points[i].y)
-  // }
-  // ctx.stroke();
 }
 
 // convert position on map to coordinates
@@ -195,7 +170,6 @@ function latLng2Point(latLng, map) {
 }
 
 function point2LatLng(point, map) {
-  console.log("point 2 lat lng", point);
   var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
   var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
   var scale = Math.pow(2, map.getZoom());
@@ -222,7 +196,7 @@ function setColor(){
   $('#brush').css('background-color', color)
   $('.color-picker div').removeClass('active')
   this.classList.add('active')
-  // toggleDrawMove()
+  toggleDrawMove()
 }
 
 function setBrushSize() {
@@ -266,7 +240,7 @@ $(function () {
   $(".map").on('mouseout', function() {
       mouseDown = false
   })
-  // $(".map").on('mousemove', drawShit)
+  $(".map").on('mousemove', drawShit)
 
   $(".paintbrush-settings input").on('change', setBrushSize)
   $(".paintbrush-settings input").on('mousemove', setBrushSize)
