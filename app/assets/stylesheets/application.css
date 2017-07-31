@@ -123,6 +123,9 @@
 
  .color-picker div.active {
    font-weight: 800;
+   margin-top: -10px;
+   z-index: 25;
+   height: 3.5em;
  }
 
  .paintbrush-settings {

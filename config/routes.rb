@@ -5,4 +5,5 @@ Rails.application.routes.draw do
 
 
   post '/paths', to: 'user_paths#create'
+  get '/paths', to: 'user_paths#index'
 end

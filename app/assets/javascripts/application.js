@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+//- require md5
 
 // load gmaps
 
@@ -26,22 +27,56 @@ function initMap() {
     center: golden,
     mapTypeId: 'satellite'
   });
+  google.maps.event.addListenerOnce(map, "projection_changed", function () {
+    getAndLoadData()
+  })
 }
 
 //globals
+
+// ajax call to DB to get all coordinates
+let allUserPaths
+
+function getAndLoadData(){
+  fetchUserPaths()
+}
+
+function fetchUserPaths() {
+  $.getJSON({
+    url: '/paths',
+    success: function (data) {
+      allUserPaths = data
+      console.log("loaded " +data.length+ " userPaths");
+      collectUserPoints()
+    }
+  })
+}
+// call a drawUserPaths fn
+
+// draw public coords if available
+
+
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
-
+const userId = md5(Math.random())
 let brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
+
+const colorKey = {
+  'concrete': 'red',
+  'setback': 'yellow',
+  'building': 'green',
+  'sidewalks': 'blue',
+  '???': 'black'
+}
 
 
 ctx.fillRect(0,0,10,10)
 ctx.fillStyle = "#ffff00"
 ctx.strokeStyle = "#ffff00"
-ctx.globalAlpha = 0.3;
+ctx.globalAlpha = 0.8;
 ctx.lineWidth = brushSize
 
 // userPaths gets sent to server
@@ -72,20 +107,59 @@ function drawShit() {
   var lat = positionOnMap.lat()
   var lng = positionOnMap.lng()
   var time = Date.now()
-  userPaths.push({coords: [lat, lng], category: category, time: time})
+
+  userPaths.push(
+      {
+        coords: [lat, lng],
+        category: category,
+        time: time,
+        user_id: userId
+      }
+    )
 }
+
 
 // logging shit in my server
 function sendToServer(){
-  console.log("sending userPaths: " + userPaths.length);
+  console.log("sending " +userPaths.length+ " paths to server");
   $.ajax({
     url: '/paths',
     dataType: "json",
     contentType: "application/json; charset=utf-8",
     type: 'POST',
     data: JSON.stringify(userPaths)
+  }).then(function () {
+    userPaths = []
   })
 }
+
+
+
+function collectUserPoints() {
+  for (var i = 0; i < allUserPaths.length; i++) {
+    var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
+    var newMark = latLng2Point(curPosition, map)
+    drawUserPaths(newMark, allUserPaths[i].category)
+  }
+}
+
+function drawUserPaths(latLng, color, event) {
+  const canvas = document.querySelector('.map')
+  const ctx = canvas.getContext('2d')
+
+  ctx.fillStyle = colorKey[color]
+  ctx.strokeStyle = colorKey[color]
+  ctx.globalAlpha = 0.8;
+  ctx.lineWidth = map.zoom / 3
+
+
+  ctx.beginPath();
+  ctx.moveTo(latLng.x, latLng.y)
+  ctx.lineTo(latLng.x, latLng.y)
+  ctx.stroke();
+
+}
+
 // convert position on map to coordinates
 function latLng2Point(latLng, map) {
   var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
@@ -143,6 +217,8 @@ function toggleDrawMove() {
     $('#google-map').css('z-index', 8)
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Move Map"
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    collectUserPoints(event)
   }
 }
 
