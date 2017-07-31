@@ -47,14 +47,10 @@ function fetchUserPaths() {
     success: function (data) {
       allUserPaths = data
       console.log("loaded " +data.length+ " userPaths");
-      collectUserPoints()
+      collectUserPoints(event)
     }
   })
 }
-// call a drawUserPaths fn
-
-// draw public coords if available
-
 
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
@@ -84,6 +80,7 @@ userPaths = []
 
 function drawShit() {
   if(!mouseDown) return;
+  console.log("DRAWING from inside drawStuff");
   var offsetX = event.offsetX
   var offsetY = event.offsetY
 
@@ -95,6 +92,8 @@ function drawShit() {
   ctx.moveTo(points[0].x, points[0].y)
   for (var i = 0; i < points.length; i++) {
     ctx.lineTo(points[i].x, points[i].y)
+    console.log({"pointsx": points[i].x,
+                "pointsy": points[i].y});
   }
 
   ctx.stroke();
@@ -121,6 +120,7 @@ function drawShit() {
 
 // logging shit in my server
 function sendToServer(){
+  console.log("sending " +userPaths.length+ " paths to server");
   $.ajax({
     url: '/paths',
     dataType: "json",
@@ -134,8 +134,10 @@ function sendToServer(){
 
 
 
-function collectUserPoints() {
+function collectUserPoints(event) {
+  console.log("allUserPaths.length: ", allUserPaths.length);
   for (var i = 0; i < allUserPaths.length; i++) {
+    console.log("allUserPaths, i: ", allUserPaths.length, i);
     path = allUserPaths[i]
     point = {}
     point.x = path.lat
@@ -143,28 +145,34 @@ function collectUserPoints() {
     var curPosition = new google.maps.LatLng(point.x, point.y)
     var newMark = latLng2Point(curPosition, map)
 
-    drawUserPaths(newMark, allUserPaths[i])
-    // ctx.beginPath();
-    // ctx.moveTo(newMark.x, newMark.y)
-    //
-    // ctx.lineTo(newMark.x + 1, newMark.y + 1)
-    // ctx.stroke();
+    // drawUserPaths(newMark, allUserPaths[i], event)
   }
 }
 
-function drawUserPaths(latLng, orgData) {
-  console.log({
-    fillStyle: colorKey[orgData.category],
-    lineWidth: map.zoom,
-    latLngX: latLng.x,
-    latLngY: latLng.y
-  });
-  ctx.fillStyle = colorKey[orgData.category]
-  ctx.strokeStyle = colorKey[orgData.category]
+function drawUserPaths(latLng, orgData, event) {
+  // console.log({
+  //   fillStyle: colorKey[orgData.category],
+  //   lineWidth: map.zoom,
+  //   latLngX: latLng.x,
+  //   latLngY: latLng.y
+  // });
+  ctx.fillStyle = "purple";
+  ctx.strokeStyle = "purple";
+  // ctx.fillStyle = colorKey[orgData.category]
+  // ctx.strokeStyle = colorKey[orgData.category]
   ctx.globalAlpha = 0.8;
   ctx.lineWidth = map.zoom / 3
 
+  // console.log({
+  //   "event.offsetX": event.offsetX,
+  //   "event.offsetY": event.offsetY,
+  //   "latlngx": latLng.x,
+  //   "latlngY": latLng.y
+  // })
+
   ctx.beginPath();
+  console.log("drawing on screen w/latlngx/y: ", latLng.x, latLng.y);
+  // ctx.lineTo(548, 154)
   ctx.lineTo(latLng.x, latLng.y)
   ctx.stroke();
 
@@ -187,6 +195,7 @@ function latLng2Point(latLng, map) {
 }
 
 function point2LatLng(point, map) {
+  console.log("point 2 lat lng", point);
   var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
   var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
   var scale = Math.pow(2, map.getZoom());
@@ -213,7 +222,7 @@ function setColor(){
   $('#brush').css('background-color', color)
   $('.color-picker div').removeClass('active')
   this.classList.add('active')
-  toggleDrawMove()
+  // toggleDrawMove()
 }
 
 function setBrushSize() {
@@ -234,7 +243,7 @@ function toggleDrawMove() {
     $('#google-map').css('z-index', 8)
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Move Map"
-    collectUserPoints()
+    collectUserPoints(event)
   }
 }
 
