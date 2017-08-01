@@ -27,13 +27,13 @@ function initMap() {
     center: golden,
     mapTypeId: 'satellite'
   });
+  resizeCanvas()
   google.maps.event.addListenerOnce(map, "projection_changed", function () {
-    resizeCanvas()
     getAndLoadData()
   })
 
-  // $('.map').width(2000)
-  // $('.map').height(500)
+  // $('.map').width(window.innerWidth)
+  // $('.map').height(window.innerHeight)
 
 }
 
@@ -65,6 +65,11 @@ var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
+// console.log("window height: ", window.innerHeight);
+// console.log("ctx width: ", ctx.canvas.width);
+// console.log("ctx height: ", ctx.canvas.height);
+// ctx.canvas.width = window.innerWidth
+// ctx.canvas.height = window.innerHeight
 const userId = md5(Math.random())
 var lineCount = 0
 let brushSize = 20
@@ -89,6 +94,8 @@ userPaths = []
 
 function drawShit() {
   if(!mouseDown) return;
+  ctx.width = window.innerWidth
+  ctx.height = window.innerHeight
   ctx.fillStyle = currentColor
   ctx.strokeStyle = currentColor
   var offsetX = event.offsetX
@@ -172,6 +179,10 @@ function drawUserPaths(latLng, color, event) {
 
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
+  // ctx.width = window.innerWidth
+  // ctx.height = window.innerHeight
+  // console.log("map height: ", $('.map').height());
+  // console.log($("window innerHeight: ", window.innerHeight));
 
   ctx.fillStyle = colorKey[color]
   ctx.strokeStyle = colorKey[color]
@@ -252,7 +263,17 @@ function toggleDrawMove() {
 }
 
 function resizeCanvas() {
-  // $('.map').width(window.innerWidth)
+
+  // console.log("map width: ", $('.map').width());
+  // var height = $('.canvas_container').innerHeight()
+  // var width = $('.canvas_container').innerWidth()
+  // console.log(height);
+  // $('.map').height(height)
+  // $('.map').width(width)
+  //
+  //
+  // console.log("after map width: ", $('.map').width());
+  // console.log("after map height: ", $('.map').height());
   // $('.map').height(window.innerHeight)
 
   // $('.map').attr('width', window.innerWidth)

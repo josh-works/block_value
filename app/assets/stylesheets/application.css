@@ -25,7 +25,7 @@
  }
 
 html, body {
-  height: 100%
+  height: 90%
 }
 
  body {
@@ -47,7 +47,7 @@ html, body {
 
  .canvas_container {
    width: 100%;
-   height: 600px;
+   height: 90%;
  }
 
  .map {
@@ -58,17 +58,17 @@ html, body {
    top: 0;
    left: 0;
    opacity: .8;
-   z-index: 1000;
+   z-index: 11;
    cursor: none;
 
  }
 
  #google-map {
   position: static;
+  height: 100%;
   top: 0;
   left: 0;
   width: inherit;
-  height: inherit;
   background-color: black;
   z-index: 10;
  }
@@ -129,8 +129,10 @@ html, body {
  }
 
  .paintbrush-settings {
+   position: relative;
    clear: left;
    width: 100%;
+   z-index: 150;
  }
 
  .paintbrush-settings div {
@@ -149,7 +151,6 @@ html, body {
 
  .paintbrush-settings div span {
    color: #fff;
-   font-size: 1.5em;
    text-shadow: 1px 1px 1px #000;
  }
 
@@ -176,12 +177,12 @@ html, body {
    position: fixed;
    z-index: 100;
  }
+
  .brush-size {
    color: grey;
-   font-size: 2em;
    text-shadow: 1px 1px 1px #000;
    width: 20%;
-   height: 20px;
+   height: 4em;
    border-style: solid;
    border-color: red;
  }
@@ -189,8 +190,10 @@ html, body {
 
  .analytics {
    position: relative;
+   width: 100%
    left: 20px;
    top: 90px;
    clear: left;
    display: block;
+   z-index: 1000;
  }
