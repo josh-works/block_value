@@ -36,7 +36,7 @@ function initMap() {
 //globals
 
 // ajax call to DB to get all coordinates
-let allUserPaths
+var allUserPaths = []
 
 function getAndLoadData(){
   fetchUserPaths()
@@ -63,7 +63,7 @@ const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
 const userId = md5(Math.random())
 var lineCount = 0
-let brushSize = 20
+var brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
 const colorKey = {
