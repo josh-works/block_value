@@ -27,10 +27,14 @@ function initMap() {
     center: golden,
     mapTypeId: 'satellite'
   });
-  console.log("zoom: ", map.zoom);
+  resizeCanvas()
   google.maps.event.addListenerOnce(map, "projection_changed", function () {
     getAndLoadData()
   })
+
+  // $('.map').width(window.innerWidth)
+  // $('.map').height(window.innerHeight)
+
 }
 
 //globals
@@ -61,6 +65,11 @@ var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
+// console.log("window height: ", window.innerHeight);
+// console.log("ctx width: ", ctx.canvas.width);
+// console.log("ctx height: ", ctx.canvas.height);
+// ctx.canvas.width = window.innerWidth
+// ctx.canvas.height = window.innerHeight
 const userId = md5(Math.random())
 var lineCount = 0
 var brushSize = 20
@@ -85,6 +94,8 @@ userPaths = []
 
 function drawShit() {
   if(!mouseDown) return;
+  ctx.width = window.innerWidth
+  ctx.height = window.innerHeight
   ctx.fillStyle = currentColor
   ctx.strokeStyle = currentColor
   var offsetX = event.offsetX
@@ -111,8 +122,6 @@ function drawShit() {
   var lng = positionOnMap.lng()
   var time = Date.now()
   var sizeRatio = map.zoom / brushSize
-  console.log(lineCount);
-  console.log(sizeRatio);
   userPaths.push(
       {
         coords: [lat, lng],
@@ -144,7 +153,7 @@ function sendToServer(){
 
 
 function collectUserPoints() {
-  console.log(allUserPaths[0]);
+  console.log("collectUserPoints");
   for (var i = 0; i < allUserPaths.length; i++) {
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
     var newMark = latLng2Point(curPosition, map)
@@ -166,13 +175,14 @@ const zoomSizeConversionLog = {
   12: 10
 }
 
-
-
-
 function drawUserPaths(latLng, color, event) {
 
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
+  // ctx.width = window.innerWidth
+  // ctx.height = window.innerHeight
+  // console.log("map height: ", $('.map').height());
+  // console.log($("window innerHeight: ", window.innerHeight));
 
   ctx.fillStyle = colorKey[color]
   ctx.strokeStyle = colorKey[color]
@@ -252,6 +262,25 @@ function toggleDrawMove() {
   fetchUserPaths()
 }
 
+function resizeCanvas() {
+
+  // console.log("map width: ", $('.map').width());
+  // var height = $('.canvas_container').innerHeight()
+  // var width = $('.canvas_container').innerWidth()
+  // console.log(height);
+  // $('.map').height(height)
+  // $('.map').width(width)
+  //
+  //
+  // console.log("after map width: ", $('.map').width());
+  // console.log("after map height: ", $('.map').height());
+  // $('.map').height(window.innerHeight)
+
+  // $('.map').attr('width', window.innerWidth)
+  // var mapWidth = $('.map').attr('width')
+  // console.log("mapWidth: ", mapWidth);
+  // $('.map').attr('height', window.innerWidth)
+}
 
 $(function () {
 
@@ -281,4 +310,9 @@ $(function () {
   $(".map").on('mousemove', function() {
     moveBrush(event.offsetX, event.offsetY)
   })
+
+
+  // $(window).on('resize', function() {
+  //   resizeCanvas()
+  // })
 })
