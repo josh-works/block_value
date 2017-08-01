@@ -40,7 +40,7 @@ function initMap() {
 //globals
 
 // ajax call to DB to get all coordinates
-var allUserPaths = []
+let allUserPaths
 
 function getAndLoadData(){
   fetchUserPaths()
@@ -72,7 +72,7 @@ const ctx = canvas.getContext('2d')
 // ctx.canvas.height = window.innerHeight
 const userId = md5(Math.random())
 var lineCount = 0
-var brushSize = 20
+let brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
 const colorKey = {
@@ -163,16 +163,16 @@ function collectUserPoints() {
 
 
 const zoomSizeConversionLog = {
-  21: 25,
-  20: 19,
+  21: 40,
+  20: 35,
   19: 15,
   18: 10,
-  17: 10,
-  16: 10,
-  15: 10,
-  14: 10,
-  13: 10,
-  12: 10
+  17: 6,
+  16: 4,
+  15: 1,
+  14: 1,
+  13: 1,
+  12: 1
 }
 
 function drawUserPaths(latLng, color, event) {
@@ -188,7 +188,6 @@ function drawUserPaths(latLng, color, event) {
   ctx.strokeStyle = colorKey[color]
   ctx.globalAlpha = 0.8;
   ctx.lineWidth = zoomSizeConversionLog[map.zoom]
-
 
   ctx.beginPath();
   ctx.moveTo(latLng.x, latLng.y)
