@@ -23,10 +23,11 @@
 function initMap() {
   var golden = {lat: 39.748327, lng: -105.217697};
   map = new google.maps.Map(document.getElementById('google-map'), {
-    zoom: 18,
+    zoom: 19,
     center: golden,
     mapTypeId: 'satellite'
   });
+  console.log("zoom: ", map.zoom);
   google.maps.event.addListenerOnce(map, "projection_changed", function () {
     getAndLoadData()
   })
@@ -61,6 +62,7 @@ var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
 const userId = md5(Math.random())
+var lineCount = 0
 let brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
@@ -74,8 +76,7 @@ const colorKey = {
 
 
 ctx.fillRect(0,0,10,10)
-ctx.fillStyle = "#ffff00"
-ctx.strokeStyle = "#ffff00"
+var currentColor = "#fff00"
 ctx.globalAlpha = 0.8;
 ctx.lineWidth = brushSize
 
@@ -84,6 +85,8 @@ userPaths = []
 
 function drawShit() {
   if(!mouseDown) return;
+  ctx.fillStyle = currentColor
+  ctx.strokeStyle = currentColor
   var offsetX = event.offsetX
   var offsetY = event.offsetY
 
@@ -107,13 +110,17 @@ function drawShit() {
   var lat = positionOnMap.lat()
   var lng = positionOnMap.lng()
   var time = Date.now()
-
+  var sizeRatio = map.zoom / brushSize
+  console.log(lineCount);
+  console.log(sizeRatio);
   userPaths.push(
       {
         coords: [lat, lng],
         category: category,
         time: time,
-        user_id: userId
+        user_id: userId,
+        size_ratio: sizeRatio,
+        line_count: lineCount
       }
     )
 }
@@ -121,6 +128,7 @@ function drawShit() {
 
 // logging shit in my server
 function sendToServer(){
+  lineCount++
   console.log("sending " +userPaths.length+ " paths to server");
   $.ajax({
     url: '/paths',
@@ -136,6 +144,7 @@ function sendToServer(){
 
 
 function collectUserPoints() {
+  console.log(allUserPaths[0]);
   for (var i = 0; i < allUserPaths.length; i++) {
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
     var newMark = latLng2Point(curPosition, map)
@@ -143,14 +152,32 @@ function collectUserPoints() {
   }
 }
 
+
+const zoomSizeConversionLog = {
+  21: 25,
+  20: 19,
+  19: 15,
+  18: 10,
+  17: 10,
+  16: 10,
+  15: 10,
+  14: 10,
+  13: 10,
+  12: 10
+}
+
+
+
+
 function drawUserPaths(latLng, color, event) {
+
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
 
   ctx.fillStyle = colorKey[color]
   ctx.strokeStyle = colorKey[color]
   ctx.globalAlpha = 0.8;
-  ctx.lineWidth = map.zoom / 3
+  ctx.lineWidth = zoomSizeConversionLog[map.zoom]
 
 
   ctx.beginPath();
@@ -191,11 +218,13 @@ function hideBrush() {
 
 function setColor(){
   var color = this.dataset.color
-  ctx.fillStyle = color
-  ctx.strokeStyle = color
+  currentColor = color
   $('#brush').css('background-color', color)
   $('.color-picker div').removeClass('active')
   this.classList.add('active')
+  if($('#toggle-draw-move-map')[0].dataset.canvasActive === "true") {
+    return
+  }
   toggleDrawMove()
 }
 
@@ -212,14 +241,15 @@ function toggleDrawMove() {
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Draw on Map"
     $('#google-map').css('z-index', 12)
-  } else {
+  }
+  if(canvasActive === "false") {
     $('#toggle-draw-move-map')[0].dataset.canvasActive = "true"
     $('#google-map').css('z-index', 8)
     var text = $('#toggle-draw-move-map > span')
     text[0].innerText = "Move Map"
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    collectUserPoints(event)
   }
+  fetchUserPaths()
 }
 
 
