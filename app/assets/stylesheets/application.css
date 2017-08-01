@@ -24,6 +24,10 @@
    user-select: none;          /* Likely future */
  }
 
+html, body {
+  height: 100%
+}
+
  body {
    font-family: "Helvetica Neue", "Helvetica", sans-serif;
  }
@@ -35,7 +39,7 @@
    text-shadow: 1px 1px 1px #000;
    margin-bottom: -20px;
    position: absolute;
-   top: 0.5em;
+   top: 1em;
    left: 0.5em;
    z-index: 1000;
    pointer-events: none;
@@ -43,7 +47,7 @@
 
  .canvas_container {
    width: 100%;
-   height: 500px;
+   height: 600px;
  }
 
  .map {
@@ -54,13 +58,13 @@
    top: 0;
    left: 0;
    opacity: .8;
-   z-index: 11;
+   z-index: 1000;
    cursor: none;
 
  }
 
  #google-map {
-  position: absolute;
+  position: static;
   top: 0;
   left: 0;
   width: inherit;
@@ -70,31 +74,30 @@
  }
 
  .color-picker {
+   position: absolute;
+   top:0;
+   left:0;
    display: block;
    width: 100%;
+   z-index:110;
  }
  .color-picker div {
    width: 100%;
    text-align: center;
    vertical-align: middle;
-   height: 3em;
+   height: 3.1em;
    width: 20%;
    float: left;
    cursor: pointer;
    text-transform: uppercase;
    position: relative;
+   opacity: .9;
  }
 
   .color-picker div:hover {
-   margin-top: -10px;
-   /*margin-bottom: 10px;*/
-   z-index: 25;
-   height: 3.5em;
- }
-
- .color-picker div.selected {
-   margin-top: -10px;
-   height: 3.5em;
+   /*margin-top: 10px;
+   margin-bottom: 10px;*/
+   height: 3.7em;
  }
 
  .color-picker div span {
@@ -106,7 +109,6 @@
  .color-picker div.red {
    background-color:red;
  }
-
 
  .color-picker div.yellow {
    background-color: yellow;
@@ -122,10 +124,8 @@
  }
 
  .color-picker div.active {
-   font-weight: 800;
-   margin-top: -10px;
-   z-index: 25;
-   height: 3.5em;
+   font-weight: 900;
+   height: 3.9em;
  }
 
  .paintbrush-settings {

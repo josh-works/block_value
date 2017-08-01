@@ -7,25 +7,26 @@
 
 <div class="canvas_container">
   <div id="google-map"></div>
-  <canvas class="map" width="2000px" height="500px"></canvas>
+  <!-- <canvas class="map" style="width: 2000px; height: 500px"></canvas> -->
+  <canvas class="map" width="2000px" height="600px"></canvas>
   <img src="/assets/cursor.png" class="cursor" />
 </div>
 
 <div class="color-picker">
   <div class="red" data-color="red" data-category="concrete">
-    <span>Concrete</span>
+    <span>Parking Lot <i class="em em-blue_car"></i></span>
   </div>
   <div class="yellow active" data-color="yellow" data-category="setback">
-    <span>Setback</span>
+    <span>Street <i class="em em-wavy_dash"></i></span>
   </div>
   <div class="green" data-color="green" data-category="building">
-    <span>Building</span>
+    <span>Green Space <i class="em  em-deciduous_tree"></i></span>
   </div>
   <div class="blue" data-color="blue" data-category="sidewalks">
-    <span>Sidewalks</span>
+    <span>Building <i class="em em-house"></i></span>
   </div>
   <div class="black" data-color="black" data-category="???">
-    <span>???</span>
+    <span>Random <i class="em  em-grey_question"></i></span>
   </div>
 
 </div>
@@ -43,6 +44,7 @@
 <div id="brush"></div>
 
 <div class="analytics">
-  analytics:
   <h3>hello</h3>
+
+  <p>You've drawn 1000 points on the map</p>
 </div>

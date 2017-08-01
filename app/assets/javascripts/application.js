@@ -27,10 +27,14 @@ function initMap() {
     center: golden,
     mapTypeId: 'satellite'
   });
-  console.log("zoom: ", map.zoom);
   google.maps.event.addListenerOnce(map, "projection_changed", function () {
+    resizeCanvas()
     getAndLoadData()
   })
+
+  // $('.map').width(2000)
+  // $('.map').height(500)
+
 }
 
 //globals
@@ -111,8 +115,6 @@ function drawShit() {
   var lng = positionOnMap.lng()
   var time = Date.now()
   var sizeRatio = map.zoom / brushSize
-  console.log(lineCount);
-  console.log(sizeRatio);
   userPaths.push(
       {
         coords: [lat, lng],
@@ -144,7 +146,7 @@ function sendToServer(){
 
 
 function collectUserPoints() {
-  console.log(allUserPaths[0]);
+  console.log("collectUserPoints");
   for (var i = 0; i < allUserPaths.length; i++) {
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
     var newMark = latLng2Point(curPosition, map)
@@ -165,9 +167,6 @@ const zoomSizeConversionLog = {
   13: 10,
   12: 10
 }
-
-
-
 
 function drawUserPaths(latLng, color, event) {
 
@@ -252,6 +251,15 @@ function toggleDrawMove() {
   fetchUserPaths()
 }
 
+function resizeCanvas() {
+  // $('.map').width(window.innerWidth)
+  // $('.map').height(window.innerHeight)
+
+  // $('.map').attr('width', window.innerWidth)
+  // var mapWidth = $('.map').attr('width')
+  // console.log("mapWidth: ", mapWidth);
+  // $('.map').attr('height', window.innerWidth)
+}
 
 $(function () {
 
@@ -281,4 +289,9 @@ $(function () {
   $(".map").on('mousemove', function() {
     moveBrush(event.offsetX, event.offsetY)
   })
+
+
+  // $(window).on('resize', function() {
+  //   resizeCanvas()
+  // })
 })
