@@ -34,7 +34,7 @@ function initMap() {
 
 }
 
-let allUserPaths
+var allUserPaths = []
 
 function getAndLoadData(){
   fetchUserPaths()
@@ -59,7 +59,7 @@ const ctx = canvas.getContext('2d')
 const userId = md5(Math.random())
 
 var lineCount = 0
-let brushSize = 20
+var brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
 const colorKey = {
@@ -141,9 +141,6 @@ function sendToServer(){
 
 
 function collectUserPoints() {
-  console.log("collectUserPoints");
-  console.log(allUserPaths[0]);
-  console.log("sizeRatio: ", allUserPaths[0].size_ratio);
   for (var i = 0; i < allUserPaths.length; i++) {
 
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
@@ -232,7 +229,6 @@ function setBrushSize() {
   brushSize = this.value
   $('#brush').css('width', this.value)
   $('#brush').css('height', this.value)
-  console.log(brushSize);
 }
 
 function toggleDrawMove() {
