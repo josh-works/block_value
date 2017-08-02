@@ -32,14 +32,8 @@ function initMap() {
     getAndLoadData()
   })
 
-  // $('.map').width(window.innerWidth)
-  // $('.map').height(window.innerHeight)
-
 }
 
-//globals
-
-// ajax call to DB to get all coordinates
 let allUserPaths
 
 function getAndLoadData(){
@@ -56,21 +50,14 @@ function fetchUserPaths() {
     }
   })
 }
-// call a drawUserPaths fn
-
-// draw public coords if available
 
 
 var colors = document.querySelectorAll(".color-picker div")
 var mouseDown = false
 const canvas = document.querySelector('.map')
 const ctx = canvas.getContext('2d')
-// console.log("window height: ", window.innerHeight);
-// console.log("ctx width: ", ctx.canvas.width);
-// console.log("ctx height: ", ctx.canvas.height);
-// ctx.canvas.width = window.innerWidth
-// ctx.canvas.height = window.innerHeight
 const userId = md5(Math.random())
+
 var lineCount = 0
 let brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
@@ -87,7 +74,6 @@ const colorKey = {
 ctx.fillRect(0,0,10,10)
 var currentColor = "#fff00"
 ctx.globalAlpha = 0.8;
-ctx.lineWidth = brushSize
 
 // userPaths gets sent to server
 userPaths = []
@@ -98,6 +84,7 @@ function drawShit() {
   ctx.height = window.innerHeight
   ctx.fillStyle = currentColor
   ctx.strokeStyle = currentColor
+  ctx.lineWidth = brushSize
   var offsetX = event.offsetX
   var offsetY = event.offsetY
 
@@ -121,7 +108,7 @@ function drawShit() {
   var lat = positionOnMap.lat()
   var lng = positionOnMap.lng()
   var time = Date.now()
-  var sizeRatio = map.zoom / brushSize
+  var sizeRatio = brushSize / map.zoom
   userPaths.push(
       {
         coords: [lat, lng],
@@ -138,6 +125,7 @@ function drawShit() {
 // logging shit in my server
 function sendToServer(){
   lineCount++
+  console.log(userPaths[0]);
   console.log("sending " +userPaths.length+ " paths to server");
   $.ajax({
     url: '/paths',
@@ -154,10 +142,13 @@ function sendToServer(){
 
 function collectUserPoints() {
   console.log("collectUserPoints");
+  console.log(allUserPaths[0]);
+  console.log("sizeRatio: ", allUserPaths[0].size_ratio);
   for (var i = 0; i < allUserPaths.length; i++) {
+
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
     var newMark = latLng2Point(curPosition, map)
-    drawUserPaths(newMark, allUserPaths[i].category)
+    drawUserPaths(newMark, allUserPaths[i].category, allUserPaths[i].size_ratio)
   }
 }
 
@@ -165,18 +156,18 @@ function collectUserPoints() {
 const zoomSizeConversionLog = {
   21: 40,
   20: 35,
-  19: 15,
-  18: 10,
-  17: 6,
+  19: 19,
+  18: 15,
+  17: 10,
   16: 4,
-  15: 1,
-  14: 1,
-  13: 1,
-  12: 1
+  15: 0.75,
+  14: 0.75,
+  13: 0.75,
+  12: 0.75
 }
 
-function drawUserPaths(latLng, color, event) {
-
+function drawUserPaths(latLng, color, sizeRatio, event) {
+  console.log("map zoom: ", map.zoom);
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
   // ctx.width = window.innerWidth
@@ -187,8 +178,8 @@ function drawUserPaths(latLng, color, event) {
   ctx.fillStyle = colorKey[color]
   ctx.strokeStyle = colorKey[color]
   ctx.globalAlpha = 0.8;
-  ctx.lineWidth = zoomSizeConversionLog[map.zoom]
-
+  // ctx.lineWidth = zoomSizeConversionLog[map.zoom]
+  ctx.lineWidth = sizeRatio * zoomSizeConversionLog[map.zoom]
   ctx.beginPath();
   ctx.moveTo(latLng.x, latLng.y)
   ctx.lineTo(latLng.x, latLng.y)
@@ -241,6 +232,7 @@ function setBrushSize() {
   brushSize = this.value
   $('#brush').css('width', this.value)
   $('#brush').css('height', this.value)
+  console.log(brushSize);
 }
 
 function toggleDrawMove() {
