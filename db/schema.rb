@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170726054331) do
+ActiveRecord::Schema.define(version: 20170802204531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,10 @@ ActiveRecord::Schema.define(version: 20170726054331) do
     t.float   "lat"
     t.float   "long"
     t.string  "category"
-    t.decimal "drawn_at", precision: 17
+    t.decimal "drawn_at",   precision: 17
+    t.float   "size_ratio"
+    t.integer "line_count"
+    t.string  "user_id"
   end
 
 end

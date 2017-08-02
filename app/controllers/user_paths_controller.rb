@@ -5,14 +5,15 @@ class UserPathsController < ApplicationController
   end
 
   def create
-    # data = UserPath.new(paths_params)
     params["_json"].each do |path|
-      # this is pulling each item in single array, making four objects
       UserPath.create!(
                     lat: path["coords"][0],
                     long: path["coords"][1],
                     category: path["category"],
-                    drawn_at: path["time"]
+                    drawn_at: path["time"],
+                    size_ratio: path["size_ratio"],
+                    line_count: path["line_count"],
+                    user_id: path["user_id"]
                     )
     end
     # render json: paths_params
