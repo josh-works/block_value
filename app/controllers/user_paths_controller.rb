@@ -20,7 +20,8 @@ class UserPathsController < ApplicationController
   end
 
   def destroy
-    UserPath.destroy_all(user_id: delete_params["user_id"], line_count: delete_params["line_count"] - 1)
+    last_line = UserPath.where(user_id: delete_params["user_id"]).maximum("line_count")
+    UserPath.destroy_all(user_id: delete_params["user_id"], line_count: last_line)
   end
 
 

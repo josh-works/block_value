@@ -260,11 +260,11 @@ function undoDraw() {
     dataType: "json",
     contentType: "application/json; charset=utf-8",
     type: 'DELETE',
-    data: JSON.stringify(data)
-  }).then(function () {
-    lineCount--
-    console.log("deleted data, line count: ", lineCount);
-    getAndLoadData()
+    data: JSON.stringify(data),
+    success:function(data){
+      console.log("deleted data, line count: ", lineCount);
+      fetchUserPaths()
+    }
   })
 }
 
