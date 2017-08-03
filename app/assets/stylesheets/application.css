@@ -133,15 +133,15 @@ html, body {
    clear: left;
    width: 100%;
    z-index: 150;
+
  }
 
  .paintbrush-settings div {
    /*padding: 2em;*/
    width: 100%;
    text-align: center;
-   vertical-align: middle;
    height: 3em;
-   margin-top: -5px;
+   margin-top: -3px;
    width: 20%;
    float: left;
    display: block;
@@ -149,9 +149,17 @@ html, body {
    text-transform: uppercase;
  }
 
- .paintbrush-settings div span {
+ .paintbrush-settings div:hover {
+   margin-top: -20px;
+   height: 4em;
+   /*height: 3.7em;*/
+ }
+
+ .paintbrush-settings span {
    color: #fff;
    text-shadow: 1px 1px 1px #000;
+   border-style: solid;
+   padding-bottom: -20px;
  }
 
  .paintbrush-settings div#toggle-draw-move-map {

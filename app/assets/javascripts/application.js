@@ -227,6 +227,9 @@ function setBrushSize() {
   brushSize = this.value
   $('#brush').css('width', this.value)
   $('#brush').css('height', this.value)
+  console.log(this.parent);
+  var color = $('.brush-size').attr('background-color')
+  console.log(color);
 }
 
 function toggleDrawMove() {
