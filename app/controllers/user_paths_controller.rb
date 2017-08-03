@@ -19,16 +19,17 @@ class UserPathsController < ApplicationController
     # render json: paths_params
   end
 
+  def destroy
+    UserPath.destroy_all(user_id: delete_params["user_id"], line_count: delete_params["line_count"] - 1)
+  end
+
 
   private
-
+    def delete_params
+      params.require(:user_path).permit(:user_id, :line_count)
+    end
     def paths_params
-        params.permit
-        (
-          [
-            { "_json" => ["coords", "category", "time"]}
-          ]
-        )
+        params.permit ( [ { "_json" => ["coords", "category", "time"]} ] )
     end
 end
 
