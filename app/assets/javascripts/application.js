@@ -227,9 +227,7 @@ function setBrushSize() {
   brushSize = this.value
   $('#brush').css('width', this.value)
   $('#brush').css('height', this.value)
-  console.log(this.parent);
   var color = $('.brush-size').attr('background-color')
-  console.log(color);
 }
 
 function toggleDrawMove() {
@@ -270,25 +268,6 @@ function undoDraw() {
   })
 }
 
-function resizeCanvas() {
-
-  // console.log("map width: ", $('.map').width());
-  // var height = $('.canvas_container').innerHeight()
-  // var width = $('.canvas_container').innerWidth()
-  // console.log(height);
-  // $('.map').height(height)
-  // $('.map').width(width)
-  //
-  //
-  // console.log("after map width: ", $('.map').width());
-  // console.log("after map height: ", $('.map').height());
-  // $('.map').height(window.innerHeight)
-
-  // $('.map').attr('width', window.innerWidth)
-  // var mapWidth = $('.map').attr('width')
-  // console.log("mapWidth: ", mapWidth);
-  // $('.map').attr('height', window.innerWidth)
-}
 
 $(function () {
 
@@ -342,14 +321,8 @@ $(function () {
     undoDraw()
   })
 
-  console.log("window innerHeight: ", window.innerHeight);
-  console.log("window innerWidth: ", window.innerWidth);
   document.getElementsByClassName('.map').height = window.innerHeight
   document.getElementsByClassName('.map').width = window.innerWidth
-  console.log(".map height: ", document.getElementsByClassName('.map').height);
-  console.log("canvas container: ", document.getElementsByClassName('.canvas_container'));
-  console.log(".map width: ", document.getElementsByClassName('.map').width);
-  // $(window).on('resize', function() {
-  //   resizeCanvas()
-  // })
+
+
 })
