@@ -256,7 +256,6 @@ function undoDraw() {
         user_id: userId,
         line_count: lineCount
         }
-  console.log(data);
 
   $.ajax({
     url: '/paths',
@@ -343,7 +342,13 @@ $(function () {
     undoDraw()
   })
 
-
+  console.log("window innerHeight: ", window.innerHeight);
+  console.log("window innerWidth: ", window.innerWidth);
+  document.getElementsByClassName('.map').height = window.innerHeight
+  document.getElementsByClassName('.map').width = window.innerWidth
+  console.log(".map height: ", document.getElementsByClassName('.map').height);
+  console.log("canvas container: ", document.getElementsByClassName('.canvas_container'));
+  console.log(".map width: ", document.getElementsByClassName('.map').width);
   // $(window).on('resize', function() {
   //   resizeCanvas()
   // })
