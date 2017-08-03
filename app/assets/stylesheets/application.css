@@ -164,6 +164,10 @@ html, body {
    background-color: red;
  }
 
+ .paintbrush-settings .undo-draw {
+   background-color: grey;
+ }
+
  #brush {
    background-color: #ffff00;
    border-radius: 100%;
@@ -190,7 +194,7 @@ html, body {
 
  .analytics {
    position: relative;
-   width: 100%
+   width: 100%;
    left: 20px;
    top: 90px;
    clear: left;

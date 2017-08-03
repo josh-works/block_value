@@ -34,7 +34,7 @@ function initMap() {
 
 }
 
-let allUserPaths
+var allUserPaths = []
 
 function getAndLoadData(){
   fetchUserPaths()
@@ -59,7 +59,7 @@ const ctx = canvas.getContext('2d')
 const userId = md5(Math.random())
 
 var lineCount = 0
-let brushSize = 20
+var brushSize = 20
 ctx.lineJoin = ctx.lineCap = 'round'
 
 const colorKey = {
@@ -125,7 +125,6 @@ function drawShit() {
 // logging shit in my server
 function sendToServer(){
   lineCount++
-  console.log(userPaths[0]);
   console.log("sending " +userPaths.length+ " paths to server");
   $.ajax({
     url: '/paths',
@@ -141,9 +140,6 @@ function sendToServer(){
 
 
 function collectUserPoints() {
-  console.log("collectUserPoints");
-  console.log(allUserPaths[0]);
-  console.log("sizeRatio: ", allUserPaths[0].size_ratio);
   for (var i = 0; i < allUserPaths.length; i++) {
 
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
@@ -167,7 +163,6 @@ const zoomSizeConversionLog = {
 }
 
 function drawUserPaths(latLng, color, sizeRatio, event) {
-  console.log("map zoom: ", map.zoom);
   const canvas = document.querySelector('.map')
   const ctx = canvas.getContext('2d')
   // ctx.width = window.innerWidth
@@ -232,7 +227,6 @@ function setBrushSize() {
   brushSize = this.value
   $('#brush').css('width', this.value)
   $('#brush').css('height', this.value)
-  console.log(brushSize);
 }
 
 function toggleDrawMove() {
@@ -251,6 +245,27 @@ function toggleDrawMove() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
   }
   fetchUserPaths()
+}
+
+function undoDraw() {
+  console.log("undoing stuff");
+  data = {
+        user_id: userId,
+        line_count: lineCount
+        }
+  console.log(data);
+
+  $.ajax({
+    url: '/paths',
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    type: 'DELETE',
+    data: JSON.stringify(data)
+  }).then(function () {
+    lineCount--
+    console.log("deleted data, line count: ", lineCount);
+    getAndLoadData()
+  })
 }
 
 function resizeCanvas() {
@@ -275,6 +290,24 @@ function resizeCanvas() {
 
 $(function () {
 
+  // <move w/shift key>
+  var lastDownTarget, canvas;
+  document.addEventListener('keydown', function(event) {
+    if(lastDownTarget == canvas) {
+        if (event.key == "Shift") {
+          toggleDrawMove()
+        }
+    }
+  }, false);
+
+  document.addEventListener('keyup', function(event) {
+    if(lastDownTarget == canvas) {
+        if (event.key == "Shift") {
+          toggleDrawMove()
+        }
+    }
+  }, false);
+  // </move w/shift key>
 
   colors.forEach(picker => picker.addEventListener('click', setColor))
 
@@ -295,11 +328,16 @@ $(function () {
   $(".paintbrush-settings input").on('change', setBrushSize)
   $(".paintbrush-settings input").on('mousemove', setBrushSize)
   $('#toggle-draw-move-map').on('click', toggleDrawMove)
+
   $('.map').on('mouseleave', function() {
     hideBrush()
   })
   $(".map").on('mousemove', function() {
     moveBrush(event.offsetX, event.offsetY)
+  })
+
+  $('.undo-draw').on('click', function() {
+    undoDraw()
   })
 
 
