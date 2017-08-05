@@ -21,9 +21,9 @@
 // globals
 
 function initMap() {
-  var golden = {lat: 39.748327, lng: -105.217697};
+  var golden = {lat: 39.754949, lng: -105.221217};
   map = new google.maps.Map(document.getElementById('google-map'), {
-    zoom: 17,
+    zoom: 18,
     center: golden,
     mapTypeId: 'satellite'
   });
