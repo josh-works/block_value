@@ -25,7 +25,8 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('google-map'), {
     zoom: 18,
     center: golden,
-    mapTypeId: 'satellite'
+    mapTypeId: 'satellite',
+    // disableDefaultUI: true
   });
   google.maps.event.addListenerOnce(map, "projection_changed", function () {
     getAndLoadData()
@@ -69,7 +70,6 @@ const colorKey = {
   '???': 'black'
 }
 
-
 ctx.fillRect(0,0,10,10)
 var currentColor = "#fff00"
 ctx.globalAlpha = 0.8;
@@ -104,8 +104,8 @@ function drawShit() {
   var positionOnMap = point2LatLng(point, map)
 
   var category=$('.color-picker div.active').data('category')
-  var lat = positionOnMap.lat()
-  var lng = positionOnMap.lng()
+  var lat = formatCoordinates(positionOnMap.lat())
+  var lng = formatCoordinates(positionOnMap.lng())
   var time = Date.now()
   var sizeRatio = brushSize / map.zoom
   userPaths.push(
@@ -120,6 +120,9 @@ function drawShit() {
     )
 }
 
+function formatCoordinates(coords){
+  return coords.toFixed(5)
+}
 
 // logging shit in my server
 function sendToServer(){
@@ -137,10 +140,8 @@ function sendToServer(){
 }
 
 
-
 function collectUserPoints() {
   for (var i = 0; i < allUserPaths.length; i++) {
-
     var curPosition = new google.maps.LatLng(allUserPaths[i].lat, allUserPaths[i].long)
     var newMark = latLng2Point(curPosition, map)
     drawUserPaths(newMark, allUserPaths[i].category, allUserPaths[i].size_ratio)
@@ -149,7 +150,7 @@ function collectUserPoints() {
 
 
 const zoomSizeConversionLog = {
-  21: 40,
+  21: 35,
   20: 35,
   19: 19,
   18: 15,
@@ -245,6 +246,9 @@ function toggleDrawMove() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
   }
   fetchUserPaths()
+  console.log(
+    "fetch user paths: ", allUserPaths.length
+  );
 }
 
 function undoDraw() {
